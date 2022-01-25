@@ -16,4 +16,4 @@ app.get('/', (req, res) => {
 
 app.get('/about', (req, res) => {
     res.status(200).send('<a href="/">Main</a>')
-}
+})
