@@ -5,6 +5,7 @@
     "mongoose": "^6.1.7"
   },
   "scripts": {
-    "start": "node server.js"
+    "start": "node app.js",
+    "test": "node app.js"
   }
 }
