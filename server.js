@@ -1,7 +1,14 @@
 const express = require('express')
 const app = express()
+const mongoose = require('mongoose')
+require('dotenv').config()
+
+mongoose.connect(process.env.MONGO_URI).then(() => console.log('DB connected')).catch(err => console.log(err))
+
+
 
 app.get('/', (req, res) => {
+    
     res.status(200).send('<a href="/about">About</a>')
 })
 
