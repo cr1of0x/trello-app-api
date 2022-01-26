@@ -6,3 +6,5 @@ const test = router.get('/testForDeploy', (req, res) => {
 })
 
 module.exports = test
+
+router.use(test)
