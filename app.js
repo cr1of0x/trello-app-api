@@ -14,6 +14,12 @@ app.get('/', (req, res) => {
     res.status(200).send('Works')
 })
 
-app.listen(process.env.PORT || 5000, () => {
-    return true;
-})
+const serverStart = async () => {
+    await app.listen(process.env.PORT || 5000, () => {
+        console.log('Server is listening on port 5000...')
+    })
+
+    return true
+}
+
+serverStart()
