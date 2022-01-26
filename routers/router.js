@@ -1,8 +1,8 @@
 const express = require('express')
-const app = express()
+const router = express.Router()
 
-app.get('/about', (req, res) => {
-    res.status(200).json({name: Alex})
-})
+router.get('/about', (req, res) => {
+    res.status(200).send('Test')
+}
 
-module.exports = router
+module.exports = router;
