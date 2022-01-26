@@ -6,7 +6,6 @@
     "supertest": "^6.2.2"
   },
   "scripts": {
-    "start": "node app.js",
-    "test": "node test.js"
+    "start": "node app.js"
   }
 }
