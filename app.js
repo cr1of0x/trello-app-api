@@ -15,5 +15,5 @@ app.get('/', (req, res) => {
 })
 
 app.listen(process.env.PORT || 5000, () => {
-    console.log('Server listening on 5000 port...');
+    return true;
 })

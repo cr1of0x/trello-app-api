@@ -8,6 +8,6 @@
   },
   "scripts": {
     "start": "node app.js",
-    "test": "node test.js"
+    "test": "node app.js"
   }
 }
