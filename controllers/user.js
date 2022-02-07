@@ -2,52 +2,43 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const User = require('../models/user.js')
 const transporter = require('../verification/sendEmail')
-const authSchema = require('../verification/validationSchema')
-const Joi = require('joi')
+const signupSchema = require('../validators/signupSchema')
+const { isUserExists } = require('../services/userServices')
+const errorValidation = require('../validators/errorValidation')
 
 const signin = async (req, res) => {
     const { email, password } = req.body
     try {
-        const existingUser = await User.findOne({ email });
+        const existingUser = await isUserExists(email)
+        if(!existingUser) return errorValidation(422, 'email', 'User doesnt exists!', res)
 
-        if(!existingUser) return res.status(422).json({ message: "User doesn't exist" })
 
         const isPasswordCorrect = await bcrypt.compare(password, existingUser.password)
-
-        if(!isPasswordCorrect) return res.status(422).json({message: "Invalid credentials"})
+        if(!isPasswordCorrect) return errorValidation(422, 'password', 'Invalid password!', res)
 
         const token = jwt.sign({ email: existingUser.email, id: existingUser._id }, 'test', { expiresIn: '1h'})
 
-        res.status(200).json({result : existingUser, token})
+        res.status(200).json({user: existingUser, token})
     } catch (error) {
-        res.status(500).json({ message: "Something went wrong"})
+        if(error.isJoi) {res.status(422).json({ error })} else{res.status(500).json({ error })}
     }
 }
 
 const signup = async (req,res) => {
-    const {login, email, password, confirmPassword} = req.body
     
     try {
-        const result = await authSchema.validateAsync(req.body)
-        console.log(result)
+        const result = await signupSchema.validateAsync(req.body)
 
-        const existingUser = await User.findOne({ email })
+        const existingUser = await isUserExists(result.email)
 
-        if(existingUser) return res.status(422).json({error: {details:[
-            {
-                "message": "User with such email already exists!",              
-                "context": {
-                    "key": "email"
-                }
-            }
-        ]}})
+        if(existingUser) return errorValidation(422, 'email', 'User with such email already exists!', res)
 
-        const token = jwt.sign({login, email, password}, 'email_secret', {expiresIn: '1h'})
+        const token = jwt.sign({login : result.login, email: result.email, password: result.password}, 'email_secret', {expiresIn: '1h'})
 
         const url = `http://localhost:5000/users/verification/${token}`
 
         await transporter.sendMail({
-            to: email,
+            to: result.email,
             subject: 'Confirm Email',
             html: `To confirm registration please click <a href="${url}">"here"</a>`
         })
@@ -65,8 +56,6 @@ const verification = async (req,res) => {
         
         const {login, email, password} = jwt.verify(req.params.token, 'email_secret')
 
-        console.log(jwt.verify(req.params.token, 'email_secret'))
-
         const hashedPassword = await bcrypt.hash(password, 12)
 
         const existingUser = await User.findOne({ email })
@@ -78,7 +67,7 @@ const verification = async (req,res) => {
         res.send('<h1>Your account sucessfully created! Now you can <a href="http://localhost:3000/login">login</a></h1>')
         } 
     catch(error) {
-        res.status(200).json({errors:{token : 'Token is wrong or expired'}})
+        res.status(500).json({errors:{token : 'Token is wrong or expired'}})
         }
 }
 

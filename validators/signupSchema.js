@@ -1,6 +1,6 @@
 const Joi = require('joi')
 
-const authSchema = Joi.object({
+const signupSchema = Joi.object({
     login: Joi.string().min(3).max(12).required().error(errors => {
         errors.forEach(err => {
           switch (err.code) {
@@ -8,10 +8,10 @@ const authSchema = Joi.object({
               err.message = "Login should not be empty!";
               break;
             case "string.min":
-              err.message = `Value should have at least ${err.local.limit} characters!`;
+              err.message = `Login should have at least ${err.local.limit} characters!`;
               break;
             case "string.max":
-              err.message = `Value should have at most ${err.local.limit} characters!`;
+              err.message = `Login should have at most ${err.local.limit} characters!`;
               break;
             default:
               break;
@@ -42,7 +42,7 @@ const authSchema = Joi.object({
         errors.forEach(err => {
             switch (err.code) {
               case "string.empty":
-                err.message = "Value should not be empty!";
+                err.message = "Password should not be empty!";
                 break;
               case "string.pattern.base":
                 err.message = `Passwords need 1 lower case letter 1 upper case letter and 1 service symbol`;
@@ -57,4 +57,4 @@ const authSchema = Joi.object({
     confirmPassword: Joi.ref('password')
 })
 
-module.exports = authSchema
+module.exports = signupSchema
