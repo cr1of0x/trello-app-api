@@ -54,7 +54,9 @@ const signupSchema = Joi.object({
           return errors;
     }),
 
-    confirmPassword: Joi.ref('password')
+    confirmPassword: Joi.ref('password'),
+
+    type: Joi.string().required()
 })
 
 module.exports = signupSchema
