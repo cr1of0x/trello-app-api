@@ -27,7 +27,7 @@ const signin = async (req, res) => {
 const signup = async (req,res) => {
     
     try {
-        const result = await signupSchema.validateAsync(req.body)
+        const result = await signupSchema.validateAsync(req.body, { abortEarly: false })
 
         const existingUser = await isUserExists(result.email)
 
