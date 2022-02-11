@@ -1,136 +1,84 @@
-const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
-const User = require('../models/user.js')
-const transporter = require('../verification/sendEmail')
-const signupSchema = require('../validators/signupSchema')
-const { isUserExists } = require('../services/userServices')
-const errorValidation = require('../validators/errorValidation')
+const {
+  isUserExists,
+  isPasswordCorrect,
+  createToken,
+  sendVerificationEmail,
+  jwtEncrypt,
+  hashingPassword,
+  createEmailUser,
+  joiValidation,
+  createGoogleUser,
+  sendGoogleEmail,
+} = require("../services/userServices");
+const ApiError = require("../validators/apiError.js");
+const EMAIL = "email";
 
-const signin = async (req, res) => {
-    const { email, password } = req.body
-    try {
-        const existingUser = await isUserExists(email)
-        if(!existingUser) return errorValidation(422, 'email', 'User doesnt exists!', res)
+const signin = async (email, password) => {
+  const existingUser = await isUserExists(email);
+  if (!existingUser) throw new ApiError("User doesnt exists!", "email");
+  const checkPassword = await isPasswordCorrect(
+    password,
+    existingUser.password
+  );
+  if (!checkPassword) throw new ApiError("Invalid password!", "password");
+};
 
+const signup = async (body) => {
+  const result = await joiValidation(body);
+  const existingUser = await isUserExists(result.email);
+  if (existingUser)
+    throw new ApiError("User with such email already exists!", "email");
+  const token = createToken(
+    {
+      login: result.login,
+      email: result.email,
+      password: result.password,
+      type: result.type,
+    },
+    "email_secret"
+  );
+  return sendVerificationEmail(token, result.email);
+};
 
-        const isPasswordCorrect = await bcrypt.compare(password, existingUser.password)
-        if(!isPasswordCorrect) return errorValidation(422, 'password', 'Invalid password!', res)
+const verification = async (token) => {
+  const { login, email, password, type } = jwtEncrypt(token, "email_secret");
+  const hashedPassword = await hashingPassword(password);
+  const existingUser = await isUserExists(email);
+  if (existingUser)
+    throw new ApiError("User with such email already exists", "email");
+  return createEmailUser(login, email, hashedPassword, type);
+};
 
-        const token = jwt.sign({ email: existingUser.email, id: existingUser._id }, 'test', { expiresIn: '1h'})
+const gmail = async (login, email, type) => {
+  const existingUser = await isUserExists(email);
+  if (existingUser)
+    throw new ApiError("User with such email already exists!", "email");
+  const token = createToken({ login, email, type }, "email_secret");
+  return sendGoogleEmail(token, email);
+};
 
-        res.status(200).json({user: existingUser, token})
-    } catch (error) {
-        if(error.isJoi) {res.status(422).json({ error })} else{res.status(500).json({ error })}
-    }
-}
+const gmailVerification = async (token) => {
+  const { login, email, type } = jwtEncrypt(token, "email_secret");
+  const existingUser = await isUserExists(email);
+  if (existingUser)
+    throw new ApiError("User with such email already exists", "email");
+  return createGoogleUser(login, email, type);
+};
 
-const signup = async (req,res) => {
-    
-    try {
-        const result = await signupSchema.validateAsync(req.body, { abortEarly: false })
+const gmailLogin = async (email) => {
+  const existingUser = await isUserExists(email);
+  if (!existingUser) throw new ApiError("User doesnt exists!", "email");
+  if (existingUser.type === EMAIL)
+    throw new ApiError("Please insert a password!", "password");
+  const token = createToken({ email, id: existingUser._id }, "secret");
+  return token;
+};
 
-        const existingUser = await isUserExists(result.email)
-
-        if(existingUser) return errorValidation(422, 'email', 'User with such email already exists!', res)
-
-        const token = jwt.sign({login : result.login, email: result.email, password: result.password, type: result.type}, 'email_secret', {expiresIn: '1h'})
-
-        const url = `http://localhost:5000/users/verification/${token}`
-
-        await transporter.sendMail({
-            to: result.email,
-            subject: 'Confirm Email',
-            html: `To confirm registration please click <a href="${url}">"here"</a>`
-        })
-
-        res.status(200).json({ message : `Email send` })
-
-    } catch(error) {
-        if(error.isJoi) {res.status(422).json({ error })} else{res.status(500).json({ error })}
-        
-    }
-}
-
-const verification = async (req,res) => {
-    try {
-        
-        const {login, email, password, type} = jwt.verify(req.params.token, 'email_secret')
-
-        const hashedPassword = await bcrypt.hash(password, 12)
-
-        const existingUser = await User.findOne({ email })
-
-        if(existingUser) return res.status(404).json({errors : {email: 'User with such email already exists'}})
-
-         await User.create({login, email, password: hashedPassword, type})
-
-        res.send('<h1>Your account sucessfully created! Now you can <a href="http://localhost:3000/login">login</a></h1>')
-        } 
-    catch(error) {
-        res.status(500).json({errors:{token : 'Token is wrong or expired'}})
-        }
-}
-
-const gmail = async (req, res) => {
-    const { login, email, type } = req.body
-    try {
-       
-        const existingUser = await isUserExists(email)
-
-        if(existingUser) return errorValidation(422, 'email', 'User with such email already exists!', res)
-
-        const token = jwt.sign({login, email, type}, 'email_secret', {expiresIn: '1h'})
-
-        const url = `http://localhost:5000/users/gmail/${token}`
-
-        await transporter.sendMail({
-            to: email,
-            subject: 'Confirm Email',
-            html: `To confirm registration please click <a href="${url}">"here"</a>`
-        })
-
-        res.status(200).json({ message : `Email send` })
-
-    } catch(error) {
-        if(error.isJoi) {res.status(422).json({ error })} else{res.status(500).json({ error })}
-        
-    }
-}
-
-const gmailVerification = async (req,res) => {
-    try {
-        
-        const {login, email, type} = jwt.verify(req.params.token, 'email_secret')
-
-        const existingUser = await User.findOne({ email })
-
-        if(existingUser) return res.status(404).json({errors : {email: 'User with such email already exists'}})
-
-         await User.create({login, email, type})
-
-        res.send('<h1>Your account sucessfully created! Now you can <a href="http://localhost:3000/login">login</a></h1>')
-        } 
-    catch(error) {
-        res.status(500).json({errors:{token : 'Token is wrong or expired'}})
-        console.log(error)
-        }
-}
-
-const gmailLogin = async (req, res) => {
-    const { email } = req.body
-    try {
-        const existingUser = await isUserExists(email)
-        
-        if(!existingUser) return errorValidation(422, 'email', 'User doesnt exists!', res)
-        
-        if(existingUser.type === 'email') return errorValidation(422, 'password', 'Please insert a password!', res)
-        
-        const token = jwt.sign({ email: existingUser.email, id: existingUser._id }, 'test', { expiresIn: '1h'})
-
-        res.status(200).json({user: existingUser, token})
-    } catch (error) {
-        if(error.isJoi) {res.status(422).json({ error })} else{res.status(500).json({ error })}
-    }
-}
-
-module.exports = {signin, signup, verification, gmail, gmailVerification, gmailLogin}
+module.exports = {
+  signin,
+  signup,
+  verification,
+  gmail,
+  gmailVerification,
+  gmailLogin,
+};
