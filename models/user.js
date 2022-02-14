@@ -14,6 +14,7 @@ const userSchema = mongoose.Schema({
     },
     required: true,
   },
+  dashboards: [{ type: mongoose.Schema.Types.ObjectId, ref: "Dashboard" }],
 });
 
 module.exports = mongoose.model("User", userSchema);

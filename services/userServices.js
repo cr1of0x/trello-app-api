@@ -3,7 +3,6 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const transporter = require("../verification/sendEmail");
 const signupSchema = require("../validators/signupSchema");
-const ApiError = require("../validators/apiError.js");
 
 const joiValidation = (body) => {
   try {

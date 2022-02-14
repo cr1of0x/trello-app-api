@@ -21,6 +21,7 @@ const signin = async (email, password) => {
     existingUser.password
   );
   if (!checkPassword) throw new ApiError("Invalid password!", "password");
+  return createToken({ id: existingUser._id }, "login");
 };
 
 const signup = async (body) => {
@@ -70,7 +71,8 @@ const gmailLogin = async (email) => {
   if (!existingUser) throw new ApiError("User doesnt exists!", "email");
   if (existingUser.type === EMAIL)
     throw new ApiError("Please insert a password!", "password");
-  createToken({ email }, "email_secret");
+  const token = createToken({ email }, "login");
+  return token;
 };
 
 module.exports = {
