@@ -1,6 +1,10 @@
 const express = require("express");
-const createDashboard = require("../controllers/dashboardController.js");
+const {
+  createDashboard,
+  getDashboards,
+} = require("../controllers/dashboardController.js");
 const router = express.Router();
+const verifyAcessToken = require("../utils/verifyAcessToken.js");
 
 const controllerHandler = (promise, params) => async (req, res, next) => {
   const boundParams = params ? params(req, res, next) : [];
@@ -16,12 +20,18 @@ const c = controllerHandler;
 
 router.post(
   "/createdashboard",
-  c(createDashboard, (req, res) => [
+  verifyAcessToken,
+  c(createDashboard, (req) => [
     req.body.title,
     req.body.description,
-    req.body.token,
-    res,
+    req.payload,
   ])
+);
+
+router.get(
+  "/getdashboards",
+  verifyAcessToken,
+  c(getDashboards, (req) => [req.payload])
 );
 
 module.exports = router;

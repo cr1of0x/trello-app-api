@@ -1,11 +1,9 @@
-const pushDashboard = (email, title, description) => {
-  User.find({ email })
-    .exec()
-    .then((e) => {
-      console.log(e);
-      e[0].dashboards.push({ title, description });
-      e[0].save();
-    });
+const createDashboard = (id, title, description) => {
+  return Dashboard.create({
+    user_id: id,
+    title: title,
+    description: description,
+  });
 };
 
-module.exports = { pushDashboard };
+module.exports = { createDashboard };

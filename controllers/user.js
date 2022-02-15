@@ -71,8 +71,7 @@ const gmailLogin = async (email) => {
   if (!existingUser) throw new ApiError("User doesnt exists!", "email");
   if (existingUser.type === EMAIL)
     throw new ApiError("Please insert a password!", "password");
-  const token = createToken({ email }, "login");
-  return token;
+  return createToken({ id: existingUser._id }, "login");
 };
 
 module.exports = {

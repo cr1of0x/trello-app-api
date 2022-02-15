@@ -1,20 +1,22 @@
 const User = require("../models/user.js");
 const Dashboard = require("../models/dashboard.js");
-const { jwtEncrypt } = require("../services/userServices.js");
 
-const createDashboard = async (title, description, token, res) => {
-  // const header = res.header("Authorization", "text/html");
-  // console.log(header);
-  const { id } = jwtEncrypt(token, "login");
+const createDashboard = async (title, description, token) => {
+  const id = token.id;
   const newDashboard = await Dashboard.create({
-    parent_id: id,
+    user_id: id,
     title,
     description,
   });
-  console.log(newDashboard);
   await User.findByIdAndUpdate(id, {
     $push: { dashboards: newDashboard },
   });
 };
 
-module.exports = createDashboard;
+const getDashboards = async (token) => {
+  const id = token.id;
+  const data = await Dashboard.find({ user_id: id });
+  return data;
+};
+
+module.exports = { createDashboard, getDashboards };
