@@ -1,21 +1,22 @@
-const User = require("../models/user.js");
 const Dashboard = require("../models/dashboard.js");
+const dashboardSchema = require("../validators/dashboardSchema.js");
+const { joiValidation } = require("../services/userServices.js");
+const {
+  createNewDashboard,
+  addDashboardInUser,
+  findDashboards,
+} = require("../services/dashboardServices.js");
 
-const createDashboard = async (title, description, token) => {
-  const id = token.id;
-  const newDashboard = await Dashboard.create({
-    user_id: id,
-    title,
-    description,
-  });
-  await User.findByIdAndUpdate(id, {
-    $push: { dashboards: newDashboard },
-  });
+const createDashboard = async (body, token) => {
+  const user_id = token.id;
+  const { title, description } = await joiValidation(body, dashboardSchema);
+  const newDashboard = await createNewDashboard(user_id, title, description);
+  await addDashboardInUser(user_id, newDashboard);
 };
 
 const getDashboards = async (token) => {
-  const id = token.id;
-  const data = await Dashboard.find({ user_id: id });
+  const user_id = token.id;
+  const data = await findDashboards(user_id);
   return data;
 };
 

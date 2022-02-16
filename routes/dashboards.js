@@ -12,7 +12,11 @@ const controllerHandler = (promise, params) => async (req, res, next) => {
     const result = await promise(...boundParams);
     return res.json(result);
   } catch (error) {
-    res.status(400).json({ error });
+    if (error.isJoi) {
+      res.status(400).json({ error });
+    } else {
+      res.status(500).json({ error });
+    }
   }
 };
 
@@ -21,11 +25,7 @@ const c = controllerHandler;
 router.post(
   "/createdashboard",
   verifyAcessToken,
-  c(createDashboard, (req) => [
-    req.body.title,
-    req.body.description,
-    req.payload,
-  ])
+  c(createDashboard, (req) => [req.body, req.payload])
 );
 
 router.get(

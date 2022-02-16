@@ -12,6 +12,7 @@ const {
 } = require("../services/userServices");
 const ApiError = require("../validators/apiError.js");
 const EMAIL = "email";
+const signupSchema = require("../validators/signupSchema");
 
 const signin = async (email, password) => {
   const existingUser = await isUserExists(email);
@@ -25,7 +26,7 @@ const signin = async (email, password) => {
 };
 
 const signup = async (body) => {
-  const result = await joiValidation(body);
+  const result = await joiValidation(body, signupSchema);
   const existingUser = await isUserExists(result.email);
   if (existingUser)
     throw new ApiError("User with such email already exists!", "email");

@@ -2,11 +2,10 @@ const User = require("../models/user.js");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const transporter = require("../verification/sendEmail");
-const signupSchema = require("../validators/signupSchema");
 
-const joiValidation = (body) => {
+const joiValidation = (body, schema) => {
   try {
-    return signupSchema.validateAsync(body, {
+    return schema.validateAsync(body, {
       abortEarly: false,
     });
   } catch (error) {
