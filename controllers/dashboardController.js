@@ -1,11 +1,11 @@
-const Dashboard = require("../models/dashboard.js");
 const dashboardSchema = require("../validators/dashboardSchema.js");
-const { joiValidation } = require("../services/userServices.js");
+const { joiValidation, isUserExists } = require("../services/userServices.js");
 const {
   createNewDashboard,
   addDashboardInUser,
   findDashboards,
 } = require("../services/dashboardServices.js");
+const User = require("../models/user.js");
 
 const createDashboard = async (body, token) => {
   const user_id = token.id;
@@ -20,4 +20,9 @@ const getDashboards = async (token) => {
   return data;
 };
 
-module.exports = { createDashboard, getDashboards };
+const deleteDashboard = async (id, token) => {
+  const user_id = token.id;
+  console.log(id, user_id);
+};
+
+module.exports = { createDashboard, getDashboards, deleteDashboard };

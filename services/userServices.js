@@ -22,7 +22,7 @@ const isPasswordCorrect = (password, passwordToCompare) => {
 };
 
 const createToken = (value, secret) => {
-  return jwt.sign(value, secret, { expiresIn: "1h" });
+  return jwt.sign(value, secret, { expiresIn: "24h" });
 };
 
 const sendVerificationEmail = (token, email) => {

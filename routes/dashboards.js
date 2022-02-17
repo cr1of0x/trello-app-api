@@ -2,6 +2,7 @@ const express = require("express");
 const {
   createDashboard,
   getDashboards,
+  deleteDashboard,
 } = require("../controllers/dashboardController.js");
 const router = express.Router();
 const verifyAcessToken = require("../utils/verifyAcessToken.js");
@@ -32,6 +33,12 @@ router.get(
   "/getdashboards",
   verifyAcessToken,
   c(getDashboards, (req) => [req.payload])
+);
+
+router.post(
+  "/deletedashboard",
+  verifyAcessToken,
+  c(deleteDashboard, (req) => [req.body.id, req.payload])
 );
 
 module.exports = router;
