@@ -6,8 +6,10 @@ const {
   findDashboards,
   deleteOneDashboard,
   deleteDashboardRef,
+  editOneDashboard,
 } = require("../services/dashboardServices.js");
 const User = require("../models/user.js");
+const Dashboard = require("../models/dashboard.js");
 
 const createDashboard = async (body, token) => {
   const user_id = token.id;
@@ -28,4 +30,13 @@ const deleteDashboard = async (id, token) => {
   await deleteDashboardRef(user_id, id);
 };
 
-module.exports = { createDashboard, getDashboards, deleteDashboard };
+const editDashboard = async (id, title) => {
+  await editOneDashboard(id, title);
+};
+
+module.exports = {
+  createDashboard,
+  getDashboards,
+  deleteDashboard,
+  editDashboard,
+};

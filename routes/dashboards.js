@@ -3,6 +3,7 @@ const {
   createDashboard,
   getDashboards,
   deleteDashboard,
+  editDashboard,
 } = require("../controllers/dashboardController.js");
 const router = express.Router();
 const verifyAcessToken = require("../utils/verifyAcessToken.js");
@@ -39,6 +40,12 @@ router.post(
   "/deletedashboard",
   verifyAcessToken,
   c(deleteDashboard, (req) => [req.body.id, req.payload])
+);
+
+router.post(
+  "/editdashboard",
+  verifyAcessToken,
+  c(editDashboard, (req) => [req.body.id, req.body.title])
 );
 
 module.exports = router;

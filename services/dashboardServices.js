@@ -29,10 +29,17 @@ const deleteDashboardRef = (user_id, id) => {
   });
 };
 
+const editOneDashboard = (id, title) => {
+  return Dashboard.findByIdAndUpdate(id, {
+    $set: { title },
+  });
+};
+
 module.exports = {
   createNewDashboard,
   addDashboardInUser,
   findDashboards,
   deleteOneDashboard,
   deleteDashboardRef,
+  editOneDashboard,
 };
