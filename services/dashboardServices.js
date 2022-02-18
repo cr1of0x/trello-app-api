@@ -19,4 +19,20 @@ const findDashboards = (user_id) => {
   return Dashboard.find({ user_id });
 };
 
-module.exports = { createNewDashboard, addDashboardInUser, findDashboards };
+const deleteOneDashboard = (id) => {
+  return Dashboard.deleteOne({ _id: id });
+};
+
+const deleteDashboardRef = (user_id, id) => {
+  return User.findByIdAndUpdate(user_id, {
+    $pull: { dashboards: id },
+  });
+};
+
+module.exports = {
+  createNewDashboard,
+  addDashboardInUser,
+  findDashboards,
+  deleteOneDashboard,
+  deleteDashboardRef,
+};

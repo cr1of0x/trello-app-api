@@ -4,6 +4,8 @@ const {
   createNewDashboard,
   addDashboardInUser,
   findDashboards,
+  deleteOneDashboard,
+  deleteDashboardRef,
 } = require("../services/dashboardServices.js");
 const User = require("../models/user.js");
 
@@ -22,7 +24,8 @@ const getDashboards = async (token) => {
 
 const deleteDashboard = async (id, token) => {
   const user_id = token.id;
-  console.log(id, user_id);
+  await deleteOneDashboard(id);
+  await deleteDashboardRef(user_id, id);
 };
 
 module.exports = { createDashboard, getDashboards, deleteDashboard };
