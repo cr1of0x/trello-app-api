@@ -42,7 +42,7 @@ router.get(
   c(login.gmailVerification, (req) => [req.params.token])
 );
 router.post(
-  "/gmaillogin",
+  "/gmail-login",
   c(login.gmailLogin, (req) => [req.body.email])
 );
 

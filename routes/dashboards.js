@@ -25,25 +25,25 @@ const controllerHandler = (promise, params) => async (req, res, next) => {
 const c = controllerHandler;
 
 router.post(
-  "/createdashboard",
+  "/create-dashboard",
   verifyAcessToken,
   c(createDashboard, (req) => [req.body, req.payload])
 );
 
 router.get(
-  "/getdashboards",
+  "/get-dashboards",
   verifyAcessToken,
   c(getDashboards, (req) => [req.payload])
 );
 
 router.post(
-  "/deletedashboard",
+  "/delete-dashboard",
   verifyAcessToken,
   c(deleteDashboard, (req) => [req.body.id, req.payload])
 );
 
 router.post(
-  "/editdashboard",
+  "/edit-dashboard",
   verifyAcessToken,
   c(editDashboard, (req) => [req.body.id, req.body.title])
 );

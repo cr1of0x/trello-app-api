@@ -8,8 +8,6 @@ const {
   deleteDashboardRef,
   editOneDashboard,
 } = require("../services/dashboardServices.js");
-const User = require("../models/user.js");
-const Dashboard = require("../models/dashboard.js");
 
 const createDashboard = async (body, token) => {
   const user_id = token.id;
