@@ -24,6 +24,7 @@ const dashboardSchema = Joi.object({
       return errors;
     }),
   description: Joi.string().allow(null, ""),
+  formName: Joi.string(),
 });
 
 module.exports = dashboardSchema;

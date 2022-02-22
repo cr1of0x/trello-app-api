@@ -1,5 +1,5 @@
 const dashboardSchema = require("../validators/dashboardSchema.js");
-const { joiValidation, isUserExists } = require("../services/userServices.js");
+const { joiValidation } = require("../services/userServices.js");
 const {
   createNewDashboard,
   addDashboardInUser,
