@@ -79,6 +79,7 @@ const signupSchema = Joi.object({
     }),
 
   type: Joi.string().required(),
+  formName: Joi.string(),
 });
 
 module.exports = signupSchema;

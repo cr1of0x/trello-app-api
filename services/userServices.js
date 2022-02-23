@@ -2,15 +2,14 @@ const User = require("../models/user.js");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const transporter = require("../verification/sendEmail");
-const signupSchema = require("../validators/signupSchema");
 
-const joiValidation = (body) => {
+const joiValidation = (body, schema) => {
   try {
-    return signupSchema.validateAsync(body, {
+    return schema.validateAsync(body, {
       abortEarly: false,
     });
   } catch (error) {
-    return error;
+    throw error;
   }
 };
 
@@ -23,13 +22,13 @@ const isPasswordCorrect = (password, passwordToCompare) => {
 };
 
 const createToken = (value, secret) => {
-  return jwt.sign(value, secret, { expiresIn: "1h" });
+  return jwt.sign(value, secret, { expiresIn: "24h" });
 };
 
 const sendVerificationEmail = (token, email) => {
   const url = `http://localhost:5000/users/verification/${token}`;
 
-  transporter.sendMail({
+  return transporter.sendMail({
     to: email,
     subject: "Confirm Email",
     html: `To confirm registration please click <a href="${url}">"here"</a>`,
@@ -39,7 +38,7 @@ const sendVerificationEmail = (token, email) => {
 const sendGoogleEmail = (token, email) => {
   const url = `http://localhost:5000/users/gmail/${token}`;
 
-  transporter.sendMail({
+  return transporter.sendMail({
     to: email,
     subject: "Confirm Email",
     html: `To confirm registration please click <a href="${url}">"here"</a>`,
@@ -55,11 +54,11 @@ const hashingPassword = (password) => {
 };
 
 const createEmailUser = (login, email, password, type) => {
-  User.create({ login, email, password, type });
+  return User.create({ login, email, password, type });
 };
 
 const createGoogleUser = (login, email, type) => {
-  User.create({ login, email, type });
+  return User.create({ login, email, type });
 };
 
 module.exports = {

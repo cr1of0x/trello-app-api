@@ -10,6 +10,7 @@ const controllerHandler = (promise, params) => async (req, res, next) => {
     const result = await promise(...boundParams);
     return res.json(result);
   } catch (error) {
+    // need refactoring
     if (error.isJoi) {
       res.status(400).json({ error });
     } else {
@@ -41,7 +42,7 @@ router.get(
   c(login.gmailVerification, (req) => [req.params.token])
 );
 router.post(
-  "/gmaillogin",
+  "/gmail-login",
   c(login.gmailLogin, (req) => [req.body.email])
 );
 
