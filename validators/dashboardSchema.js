@@ -2,7 +2,7 @@ const Joi = require("joi");
 
 const dashboardSchema = Joi.object({
   title: Joi.string()
-    .min(3)
+    .min(1)
     .max(12)
     .required()
     .error((errors) => {
