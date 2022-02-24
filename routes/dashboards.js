@@ -4,6 +4,8 @@ const {
   getDashboards,
   deleteDashboard,
   editDashboard,
+  addDashboardToFavorite,
+  deleteDashboardFromFavorite,
 } = require("../controllers/dashboardController.js");
 const router = express.Router();
 const verifyAcessToken = require("../utils/verifyAcessToken.js");
@@ -46,6 +48,18 @@ router.post(
   "/edit-dashboard",
   verifyAcessToken,
   c(editDashboard, (req) => [req.body.id, req.body.title])
+);
+
+router.post(
+  "/favorite-dashboard",
+  verifyAcessToken,
+  c(addDashboardToFavorite, (req) => [req.body.id])
+);
+
+router.post(
+  "/not-favorite-dashboard",
+  verifyAcessToken,
+  c(deleteDashboardFromFavorite, (req) => [req.body.id])
 );
 
 module.exports = router;
