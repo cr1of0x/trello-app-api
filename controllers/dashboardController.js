@@ -7,12 +7,24 @@ const {
   deleteOneDashboard,
   deleteDashboardRef,
   editOneDashboard,
+  editFavoriteDashboard,
 } = require("../services/dashboardServices.js");
+const dashboard = require("../models/dashboard.js");
 
 const createDashboard = async (body, token) => {
   const user_id = token.id;
-  const { title, description } = await joiValidation(body, dashboardSchema);
-  const newDashboard = await createNewDashboard(user_id, title, description);
+  const { title, isFavorite, description } = await joiValidation(
+    body,
+    dashboardSchema
+  );
+
+  console.log(isFavorite);
+  const newDashboard = await createNewDashboard(
+    user_id,
+    title,
+    description,
+    isFavorite
+  );
   await addDashboardInUser(user_id, newDashboard);
 };
 
@@ -32,9 +44,14 @@ const editDashboard = async (id, title) => {
   await editOneDashboard(id, title);
 };
 
+const addDashboardToFavorite = async (id, boolean) => {
+  await editFavoriteDashboard(id, boolean);
+};
+
 module.exports = {
   createDashboard,
   getDashboards,
   deleteDashboard,
   editDashboard,
+  addDashboardToFavorite,
 };

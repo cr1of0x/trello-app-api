@@ -1,11 +1,12 @@
 const Dashboard = require("../models/dashboard.js");
 const User = require("../models/user.js");
 
-const createNewDashboard = (user_id, title, description) => {
+const createNewDashboard = (user_id, title, description, isFavorite) => {
   return Dashboard.create({
     user_id,
     title,
     description,
+    isFavorite,
   });
 };
 
@@ -35,6 +36,12 @@ const editOneDashboard = (id, title) => {
   });
 };
 
+const editFavoriteDashboard = (id, boolean) => {
+  return Dashboard.findByIdAndUpdate(id, {
+    $set: { isFavorite: boolean },
+  });
+};
+
 module.exports = {
   createNewDashboard,
   addDashboardInUser,
@@ -42,4 +49,5 @@ module.exports = {
   deleteOneDashboard,
   deleteDashboardRef,
   editOneDashboard,
+  editFavoriteDashboard,
 };
