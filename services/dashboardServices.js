@@ -36,6 +36,12 @@ const editOneDashboard = (id, title) => {
   });
 };
 
+const editFavoriteDashboard = (id, boolean) => {
+  return Dashboard.findByIdAndUpdate(id, {
+    $set: { isFavorite: boolean },
+  });
+};
+
 module.exports = {
   createNewDashboard,
   addDashboardInUser,
@@ -43,4 +49,5 @@ module.exports = {
   deleteOneDashboard,
   deleteDashboardRef,
   editOneDashboard,
+  editFavoriteDashboard,
 };

@@ -51,15 +51,9 @@ router.post(
 );
 
 router.post(
-  "/favorite-dashboard",
+  "/add-to-favorite-dashboard",
   verifyAcessToken,
-  c(addDashboardToFavorite, (req) => [req.body.id])
-);
-
-router.post(
-  "/not-favorite-dashboard",
-  verifyAcessToken,
-  c(deleteDashboardFromFavorite, (req) => [req.body.id])
+  c(addDashboardToFavorite, (req) => [req.body.id, req.body.boolean])
 );
 
 module.exports = router;

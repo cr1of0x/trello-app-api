@@ -7,6 +7,7 @@ const {
   deleteOneDashboard,
   deleteDashboardRef,
   editOneDashboard,
+  editFavoriteDashboard,
 } = require("../services/dashboardServices.js");
 const dashboard = require("../models/dashboard.js");
 
@@ -43,16 +44,8 @@ const editDashboard = async (id, title) => {
   await editOneDashboard(id, title);
 };
 
-const addDashboardToFavorite = async (id) => {
-  await dashboard.findByIdAndUpdate(id, {
-    $set: { isFavorite: true },
-  });
-};
-
-const deleteDashboardFromFavorite = async (id) => {
-  await dashboard.findByIdAndUpdate(id, {
-    $set: { isFavorite: false },
-  });
+const addDashboardToFavorite = async (id, boolean) => {
+  await editFavoriteDashboard(id, boolean);
 };
 
 module.exports = {
@@ -61,5 +54,4 @@ module.exports = {
   deleteDashboard,
   editDashboard,
   addDashboardToFavorite,
-  deleteDashboardFromFavorite,
 };
