@@ -8,6 +8,7 @@ require("dotenv").config();
 
 const userRoutes = require("./routes/users");
 const dashboardRoutes = require("./routes/dashboards");
+const listRoutes = require("./routes/lists");
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -15,6 +16,7 @@ app.use(bodyParser.json());
 
 app.use("/users", userRoutes);
 app.use("/dashboard", dashboardRoutes);
+app.use("/list", listRoutes);
 
 mongoose
   .connect(process.env.MONGO_URI, {

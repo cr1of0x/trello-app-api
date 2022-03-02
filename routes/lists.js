@@ -1,11 +1,9 @@
 const express = require("express");
 const {
-  createDashboard,
-  getDashboards,
-  deleteDashboard,
-  editDashboard,
-  addDashboardToFavorite,
-} = require("../controllers/dashboardController.js");
+  createList,
+  getLists,
+  deleteList,
+} = require("../controllers/listController.js");
 const router = express.Router();
 const verifyAcessToken = require("../utils/verifyAcessToken.js");
 
@@ -26,33 +24,21 @@ const controllerHandler = (promise, params) => async (req, res, next) => {
 const c = controllerHandler;
 
 router.post(
-  "/create-dashboard",
+  "/create-list",
   verifyAcessToken,
-  c(createDashboard, (req) => [req.body, req.payload])
+  c(createList, (req) => [req.body.id, req.body.title])
 );
 
 router.get(
-  "/get-dashboards",
+  "/get-lists",
   verifyAcessToken,
-  c(getDashboards, (req) => [req.payload])
+  c(getLists, (req) => [req])
 );
 
 router.post(
-  "/delete-dashboard",
+  "/delete-list",
   verifyAcessToken,
-  c(deleteDashboard, (req) => [req.body.id, req.payload])
-);
-
-router.post(
-  "/edit-dashboard",
-  verifyAcessToken,
-  c(editDashboard, (req) => [req.body.id, req.body.title])
-);
-
-router.post(
-  "/add-to-favorite-dashboard",
-  verifyAcessToken,
-  c(addDashboardToFavorite, (req) => [req.body.id, req.body.boolean])
+  c(deleteList, (req) => [req.body.dashboard_id, req.body.list_id])
 );
 
 module.exports = router;

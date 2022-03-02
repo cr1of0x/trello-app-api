@@ -1,5 +1,6 @@
 const Dashboard = require("../models/dashboard.js");
 const User = require("../models/user.js");
+const List = require("../models/list.js");
 
 const createNewDashboard = (user_id, title, description, isFavorite) => {
   return Dashboard.create({
@@ -42,6 +43,10 @@ const editFavoriteDashboard = (id, boolean) => {
   });
 };
 
+const deleteListsOfDashboard = (dashboard_id) => {
+  return List.deleteMany({ dashboard_id });
+};
+
 module.exports = {
   createNewDashboard,
   addDashboardInUser,
@@ -50,4 +55,5 @@ module.exports = {
   deleteDashboardRef,
   editOneDashboard,
   editFavoriteDashboard,
+  deleteListsOfDashboard,
 };

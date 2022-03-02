@@ -8,8 +8,8 @@ const {
   deleteDashboardRef,
   editOneDashboard,
   editFavoriteDashboard,
+  deleteListsOfDashboard,
 } = require("../services/dashboardServices.js");
-const dashboard = require("../models/dashboard.js");
 
 const createDashboard = async (body, token) => {
   const user_id = token.id;
@@ -17,8 +17,6 @@ const createDashboard = async (body, token) => {
     body,
     dashboardSchema
   );
-
-  console.log(isFavorite);
   const newDashboard = await createNewDashboard(
     user_id,
     title,
@@ -38,6 +36,7 @@ const deleteDashboard = async (id, token) => {
   const user_id = token.id;
   await deleteOneDashboard(id);
   await deleteDashboardRef(user_id, id);
+  await deleteListsOfDashboard(id);
 };
 
 const editDashboard = async (id, title) => {
