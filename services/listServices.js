@@ -1,5 +1,5 @@
-const Dashboard = require("../models/dashboard.js");
-const List = require("../models/list.js");
+const Dashboard = require("../models/dashboardModel.js");
+const List = require("../models/listModel.js");
 
 const createNewList = (dashboard_id, title) => {
   return List.create({

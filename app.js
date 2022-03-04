@@ -6,9 +6,9 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 require("dotenv").config();
 
-const userRoutes = require("./routes/users");
-const dashboardRoutes = require("./routes/dashboards");
-const listRoutes = require("./routes/lists");
+const userRoutes = require("./routes/usersRoutes");
+const dashboardRoutes = require("./routes/dashboardsRoutes");
+const listRoutes = require("./routes/listsRoutes");
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));

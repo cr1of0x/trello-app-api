@@ -1,7 +1,7 @@
 const express = require("express");
 const req = require("express/lib/request");
 const router = express.Router();
-const login = require("../controllers/user.js");
+const login = require("../controllers/userController.js");
 const errorHandler = require("../validators/errorHandler");
 
 const controllerHandler = (promise, params) => async (req, res, next) => {

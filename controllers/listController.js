@@ -5,8 +5,11 @@ const {
   deleteOneList,
   deleteListRef,
 } = require("../services/listServices");
+const { joiValidation } = require("../services/userServices");
+const listSchema = require("../validators/listSchema");
 
-const createList = async (dashboard_id, title) => {
+const createList = async (dashboard_id, formData) => {
+  const { title } = await joiValidation(formData, listSchema);
   const newList = await createNewList(dashboard_id, title);
   await addListInDashboard(dashboard_id, newList);
 };

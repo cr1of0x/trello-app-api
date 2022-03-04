@@ -1,6 +1,6 @@
-const Dashboard = require("../models/dashboard.js");
-const User = require("../models/user.js");
-const List = require("../models/list.js");
+const Dashboard = require("../models/dashboardModel.js");
+const User = require("../models/userModel.js");
+const List = require("../models/listModel.js");
 
 const createNewDashboard = (user_id, title, description, isFavorite) => {
   return Dashboard.create({
