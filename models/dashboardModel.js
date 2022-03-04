@@ -5,6 +5,7 @@ const dashboardSchema = mongoose.Schema({
   title: { type: String, required: true },
   description: { type: String },
   isFavorite: { type: Boolean },
+  lists: [{ type: mongoose.Schema.Types.ObjectId, ref: "List" }],
 });
 
 module.exports = mongoose.model("Dashboard", dashboardSchema);

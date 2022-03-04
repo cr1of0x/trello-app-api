@@ -6,8 +6,9 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 require("dotenv").config();
 
-const userRoutes = require("./routes/users");
-const dashboardRoutes = require("./routes/dashboards");
+const userRoutes = require("./routes/usersRoutes");
+const dashboardRoutes = require("./routes/dashboardsRoutes");
+const listRoutes = require("./routes/listsRoutes");
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -15,6 +16,7 @@ app.use(bodyParser.json());
 
 app.use("/users", userRoutes);
 app.use("/dashboard", dashboardRoutes);
+app.use("/list", listRoutes);
 
 mongoose
   .connect(process.env.MONGO_URI, {
