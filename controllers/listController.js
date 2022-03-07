@@ -4,6 +4,7 @@ const {
   findLists,
   deleteOneList,
   deleteListRef,
+  editOneList,
 } = require("../services/listServices");
 const { joiValidation } = require("../services/userServices");
 const listSchema = require("../validators/listSchema");
@@ -25,4 +26,8 @@ const deleteList = async (dashboard_id, list_id) => {
   await deleteListRef(dashboard_id, list_id);
 };
 
-module.exports = { createList, getLists, deleteList };
+const editList = async (id, title) => {
+  await editOneList(id, title);
+};
+
+module.exports = { createList, getLists, deleteList, editList };

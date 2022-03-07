@@ -27,10 +27,18 @@ const deleteListRef = (dashboard_id, list_id) => {
     $pull: { lists: list_id },
   });
 };
+
+const editOneList = (id, title) => {
+  return List.findByIdAndUpdate(id, {
+    $set: { title },
+  });
+};
+
 module.exports = {
   createNewList,
   addListInDashboard,
   findLists,
   deleteOneList,
   deleteListRef,
+  editOneList,
 };
