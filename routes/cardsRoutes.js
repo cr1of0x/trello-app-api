@@ -1,5 +1,5 @@
 const express = require("express");
-const { createCard, getCards } = require("../controllers/cardController.js");
+const { createCard, editCard } = require("../controllers/cardController.js");
 const { controllerHandler } = require("../utils/controllerUtils.js");
 const router = express.Router();
 const verifyAcessToken = require("../utils/verifyAcessToken.js");
@@ -12,10 +12,10 @@ router.post(
   c(createCard, (req) => [req.body.id, req.body.formData])
 );
 
-router.get(
-  "/get-cards",
+router.post(
+  "/edit-card",
   verifyAcessToken,
-  c(getCards, (req) => [req])
+  c(editCard, (req) => [req.body.id, req.body.title])
 );
 
 module.exports = router;

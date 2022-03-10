@@ -1,3 +1,4 @@
+const Card = require("../models/cardModel.js");
 const Dashboard = require("../models/dashboardModel.js");
 const List = require("../models/listModel.js");
 
@@ -34,6 +35,20 @@ const editOneList = (id, title) => {
   });
 };
 
+const deleteCardsOfList = (list_id) => {
+  return Card.deleteMany({ list_id });
+};
+
+const addingCardsInList = (lists) => {
+  return Promise.all(
+    lists.map(async (e) => {
+      const cards = await Card.find({ list_id: e._id });
+      e.cards = cards;
+      return e;
+    })
+  );
+};
+
 module.exports = {
   createNewList,
   addListInDashboard,
@@ -41,4 +56,6 @@ module.exports = {
   deleteOneList,
   deleteListRef,
   editOneList,
+  deleteCardsOfList,
+  addingCardsInList,
 };

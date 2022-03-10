@@ -14,4 +14,10 @@ const addCardInList = (list_id, newCard) => {
   });
 };
 
-module.exports = { createNewCard, addCardInList };
+const editOneCard = (id, title) => {
+  return Card.findByIdAndUpdate(id, {
+    $set: { title },
+  });
+};
+
+module.exports = { createNewCard, addCardInList, editOneCard };
