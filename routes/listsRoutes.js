@@ -3,6 +3,7 @@ const {
   createList,
   getLists,
   deleteList,
+  editList,
 } = require("../controllers/listController.js");
 const { controllerHandler } = require("../utils/controllerUtils.js");
 const router = express.Router();
@@ -26,6 +27,12 @@ router.post(
   "/delete-list",
   verifyAcessToken,
   c(deleteList, (req) => [req.body.dashboard_id, req.body.list_id])
+);
+
+router.post(
+  "/edit-list",
+  verifyAcessToken,
+  c(editList, (req) => [req.body.id, req.body.title])
 );
 
 module.exports = router;
