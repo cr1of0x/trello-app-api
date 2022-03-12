@@ -20,4 +20,15 @@ const editOneCard = (id, title) => {
   });
 };
 
-module.exports = { createNewCard, addCardInList, editOneCard };
+const deleteAllCardsRef = (list_id) => {
+  return List.findByIdAndUpdate(list_id, {
+    $set: { cards: [] },
+  });
+};
+
+module.exports = {
+  createNewCard,
+  addCardInList,
+  editOneCard,
+  deleteAllCardsRef,
+};
