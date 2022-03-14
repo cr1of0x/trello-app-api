@@ -32,7 +32,11 @@ router.post(
 router.post(
   "/move-all-cards-in-another-list",
   verifyAcessToken,
-  c(moveAllCardsInAnotherList, (req) => [req.body])
+  c(moveAllCardsInAnotherList, (req) => [
+    req.body.list_from_id,
+    req.body.list_to_id,
+    req.body.cards,
+  ])
 );
 
 module.exports = router;

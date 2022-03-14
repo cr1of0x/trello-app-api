@@ -41,10 +41,10 @@ const deleteCardsOfList = (list_id) => {
 
 const addingCardsInList = (lists) => {
   return Promise.all(
-    lists.map(async (e) => {
-      const cards = await Card.find({ list_id: e._id });
-      e.cards = cards;
-      return e;
+    lists.map(async (list) => {
+      const cards = await Card.find({ list_id: list._id });
+      list.cards = cards;
+      return list;
     })
   );
 };

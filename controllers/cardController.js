@@ -3,6 +3,8 @@ const {
   addCardInList,
   editOneCard,
   deleteAllCardsRef,
+  changeListIdInCard,
+  moveAllCards,
 } = require("../services/cardServices");
 const { deleteCardsOfList } = require("../services/listServices");
 const { joiValidation } = require("../services/userServices");
@@ -23,8 +25,9 @@ const deleteAllCardsFromList = async (list_id) => {
   await deleteAllCardsRef(list_id);
 };
 
-const moveAllCardsInAnotherList = async (body) => {
-  console.log(body);
+const moveAllCardsInAnotherList = async (list_from_id, list_to_id, cards) => {
+  await deleteAllCardsRef(list_from_id);
+  await moveAllCards(cards, list_to_id);
 };
 
 module.exports = {

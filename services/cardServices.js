@@ -26,9 +26,24 @@ const deleteAllCardsRef = (list_id) => {
   });
 };
 
+const changeListIdInCard = (card_id, list_id) => {
+  return Card.findByIdAndUpdate(card_id, { $set: { list_id } });
+};
+
+const moveAllCards = (cards, list_to_id) => {
+  return Promise.all(
+    cards.map(async (card) => {
+      await changeListIdInCard(card._id, list_to_id);
+      await addCardInList(list_to_id, card);
+    })
+  );
+};
+
 module.exports = {
   createNewCard,
   addCardInList,
   editOneCard,
   deleteAllCardsRef,
+  changeListIdInCard,
+  moveAllCards,
 };
