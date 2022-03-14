@@ -4,6 +4,7 @@ const {
   getLists,
   deleteList,
   editList,
+  copyList,
 } = require("../controllers/listController.js");
 const { controllerHandler } = require("../utils/controllerUtils.js");
 const router = express.Router();
@@ -33,6 +34,16 @@ router.post(
   "/edit-list",
   verifyAcessToken,
   c(editList, (req) => [req.body.id, req.body.title])
+);
+
+router.post(
+  "/copy-list",
+  verifyAcessToken,
+  c(copyList, (req) => [
+    req.body.formData,
+    req.body.cards,
+    req.body.dashboard_id,
+  ])
 );
 
 module.exports = router;

@@ -1,6 +1,7 @@
 const Card = require("../models/cardModel.js");
 const Dashboard = require("../models/dashboardModel.js");
 const List = require("../models/listModel.js");
+const { createNewCard, addCardInList } = require("./cardServices.js");
 
 const createNewList = (dashboard_id, title) => {
   return List.create({
@@ -49,6 +50,15 @@ const addingCardsInList = (lists) => {
   );
 };
 
+const createCopiedCards = (list_id, cards) => {
+  return Promise.all(
+    cards.map(async (card) => {
+      const newCard = await createNewCard(list_id, card.title);
+      await addCardInList(list_id, newCard);
+    })
+  );
+};
+
 module.exports = {
   createNewList,
   addListInDashboard,
@@ -58,4 +68,5 @@ module.exports = {
   editOneList,
   deleteCardsOfList,
   addingCardsInList,
+  createCopiedCards,
 };
