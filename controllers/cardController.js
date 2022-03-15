@@ -3,7 +3,6 @@ const {
   addCardInList,
   editOneCard,
   deleteAllCardsRef,
-  changeListIdInCard,
   moveAllCards,
 } = require("../services/cardServices");
 const { deleteCardsOfList } = require("../services/listServices");
