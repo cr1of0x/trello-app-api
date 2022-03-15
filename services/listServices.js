@@ -1,6 +1,7 @@
 const Card = require("../models/cardModel.js");
 const Dashboard = require("../models/dashboardModel.js");
 const List = require("../models/listModel.js");
+const { createNewCard, addCardInList } = require("./cardServices.js");
 
 const createNewList = (dashboard_id, title) => {
   return List.create({
@@ -41,10 +42,19 @@ const deleteCardsOfList = (list_id) => {
 
 const addingCardsInList = (lists) => {
   return Promise.all(
-    lists.map(async (e) => {
-      const cards = await Card.find({ list_id: e._id });
-      e.cards = cards;
-      return e;
+    lists.map(async (list) => {
+      const cards = await Card.find({ list_id: list._id });
+      list.cards = cards;
+      return list;
+    })
+  );
+};
+
+const createCopiedCards = (list_id, cards) => {
+  return Promise.all(
+    cards.map(async (card) => {
+      const newCard = await createNewCard(list_id, card.title);
+      await addCardInList(list_id, newCard);
     })
   );
 };
@@ -58,4 +68,5 @@ module.exports = {
   editOneList,
   deleteCardsOfList,
   addingCardsInList,
+  createCopiedCards,
 };

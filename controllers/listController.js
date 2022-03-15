@@ -8,6 +8,7 @@ const {
   editOneList,
   deleteCardsOfList,
   addingCardsInList,
+  createCopiedCards,
 } = require("../services/listServices");
 const { joiValidation } = require("../services/userServices");
 const listSchema = require("../validators/listSchema");
@@ -35,4 +36,11 @@ const editList = async (id, title) => {
   await editOneList(id, title);
 };
 
-module.exports = { createList, getLists, deleteList, editList };
+const copyList = async (formData, cards, dashboard_id) => {
+  const { title } = await joiValidation(formData, listSchema);
+  const newList = await createNewList(dashboard_id, title);
+  list_id = newList._id;
+  await createCopiedCards(list_id, cards);
+};
+
+module.exports = { createList, getLists, deleteList, editList, copyList };
