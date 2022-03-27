@@ -1,4 +1,5 @@
 const Card = require("../models/cardModel");
+const { findOneDashboard } = require("../services/dashboardServices");
 const {
   createNewList,
   addListInDashboard,
@@ -9,6 +10,9 @@ const {
   deleteCardsOfList,
   addingCardsInList,
   createCopiedCards,
+  getListsFromDashboard,
+  moveListsArray,
+  replaceListsArrayInDashboard,
 } = require("../services/listServices");
 const { joiValidation } = require("../services/userServices");
 const listSchema = require("../validators/listSchema");
@@ -21,7 +25,8 @@ const createList = async (dashboard_id, formData) => {
 
 const getLists = async (req) => {
   const dashboard_id = req.get("dashboard");
-  const lists = await findLists(dashboard_id);
+  const populateDashboard = await getListsFromDashboard(dashboard_id);
+  const lists = populateDashboard.lists;
   const listsWithCards = await addingCardsInList(lists);
   return listsWithCards;
 };
@@ -43,4 +48,18 @@ const copyList = async (formData, cards, dashboard_id) => {
   await createCopiedCards(list_id, cards);
 };
 
-module.exports = { createList, getLists, deleteList, editList, copyList };
+const moveList = async (draggedList, listToDrop, dashboard_id) => {
+  const DASHBOARD = await findOneDashboard(dashboard_id);
+  const LISTS = await DASHBOARD.lists;
+  moveListsArray(LISTS, draggedList, listToDrop);
+  await replaceListsArrayInDashboard(LISTS, dashboard_id);
+};
+
+module.exports = {
+  createList,
+  getLists,
+  deleteList,
+  editList,
+  copyList,
+  moveList,
+};

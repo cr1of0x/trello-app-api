@@ -4,6 +4,12 @@ const {
   editCard,
   deleteAllCardsFromList,
   moveAllCardsInAnotherList,
+  dragAndDropCard,
+  dragAndDropCardSameList,
+  dragAndDropCardAnotherList,
+  moveCardInAnotherList,
+  moveCardOnCardInSameList,
+  moveCardOnCardInAnotherList,
 } = require("../controllers/cardController.js");
 const { controllerHandler } = require("../utils/controllerUtils.js");
 const router = express.Router();
@@ -36,6 +42,37 @@ router.post(
     req.body.list_from_id,
     req.body.list_to_id,
     req.body.cards,
+  ])
+);
+
+router.post(
+  "/move-card-in-another-list",
+  verifyAcessToken,
+  c(moveCardInAnotherList, (req) => [
+    req.body.card_id,
+    req.body.list_from_id,
+    req.body.list_to_id,
+  ])
+);
+
+router.post(
+  "/move-card-on-card-in-same-list",
+  verifyAcessToken,
+  c(moveCardOnCardInSameList, (req) => [
+    req.body.dragged_card_id,
+    req.body.top_card_id,
+    req.body.list_to_id,
+  ])
+);
+
+router.post(
+  "/move-card-on-card-in-another-list",
+  verifyAcessToken,
+  c(moveCardOnCardInAnotherList, (req) => [
+    req.body.dragged_card_id,
+    req.body.top_card_id,
+    req.body.list_from_id,
+    req.body.list_to_id,
   ])
 );
 

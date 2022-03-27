@@ -1,6 +1,7 @@
 const Card = require("../models/cardModel.js");
 const Dashboard = require("../models/dashboardModel.js");
 const List = require("../models/listModel.js");
+const arraymove = require("../utils/arrayMove.js");
 const { createNewCard, addCardInList } = require("./cardServices.js");
 
 const createNewList = (dashboard_id, title) => {
@@ -18,6 +19,10 @@ const addListInDashboard = (dashboard_id, newList) => {
 
 const findLists = (dashboard_id) => {
   return List.find({ dashboard_id });
+};
+
+const findOneList = (list_id) => {
+  return List.findById(list_id);
 };
 
 const deleteOneList = (list_id) => {
@@ -43,11 +48,19 @@ const deleteCardsOfList = (list_id) => {
 const addingCardsInList = (lists) => {
   return Promise.all(
     lists.map(async (list) => {
-      const cards = await Card.find({ list_id: list._id });
-      list.cards = cards;
-      return list;
+      const populateList = await List.findOne({ _id: list._id }).populate(
+        "cards"
+      );
+      return populateList;
     })
   );
+};
+
+const getListsFromDashboard = (dashboard_id) => {
+  const populateDashboard = Dashboard.findOne({ _id: dashboard_id }).populate(
+    "lists"
+  );
+  return populateDashboard;
 };
 
 const createCopiedCards = (list_id, cards) => {
@@ -57,6 +70,18 @@ const createCopiedCards = (list_id, cards) => {
       await addCardInList(list_id, newCard);
     })
   );
+};
+
+const moveListsArray = (lists, dragged_list_id, top_list_id) => {
+  const topListIndex = lists.indexOf(top_list_id);
+  const draggedListIndex = lists.indexOf(dragged_list_id);
+  arraymove(lists, draggedListIndex, topListIndex);
+};
+
+const replaceListsArrayInDashboard = (lists, dashboard_id) => {
+  return Dashboard.findByIdAndUpdate(dashboard_id, {
+    $set: { lists: lists },
+  });
 };
 
 module.exports = {
@@ -69,4 +94,8 @@ module.exports = {
   deleteCardsOfList,
   addingCardsInList,
   createCopiedCards,
+  findOneList,
+  getListsFromDashboard,
+  moveListsArray,
+  replaceListsArrayInDashboard,
 };

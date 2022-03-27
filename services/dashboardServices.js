@@ -47,6 +47,10 @@ const deleteListsOfDashboard = (dashboard_id) => {
   return List.deleteMany({ dashboard_id });
 };
 
+const findOneDashboard = (dashboard_id) => {
+  return Dashboard.findById(dashboard_id);
+};
+
 module.exports = {
   createNewDashboard,
   addDashboardInUser,
@@ -56,4 +60,5 @@ module.exports = {
   editOneDashboard,
   editFavoriteDashboard,
   deleteListsOfDashboard,
+  findOneDashboard,
 };

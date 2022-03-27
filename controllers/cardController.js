@@ -4,8 +4,12 @@ const {
   editOneCard,
   deleteAllCardsRef,
   moveAllCards,
+  deleteOneCardRef,
+  changeListIdInCard,
+  replaceCardsArrayInList,
+  moveCardsArray,
 } = require("../services/cardServices");
-const { deleteCardsOfList } = require("../services/listServices");
+const { deleteCardsOfList, findOneList } = require("../services/listServices");
 const { joiValidation } = require("../services/userServices");
 const cardSchema = require("../validators/cardSchema");
 
@@ -29,9 +33,39 @@ const moveAllCardsInAnotherList = async (list_from_id, list_to_id, cards) => {
   await moveAllCards(cards, list_to_id);
 };
 
+const moveCardInAnotherList = async (card_id, list_from_id, list_to_id) => {
+  await deleteOneCardRef(card_id, list_from_id);
+  await changeListIdInCard(card_id, list_to_id);
+  await addCardInList(list_to_id, card_id);
+};
+
+const moveCardOnCardInSameList = async (
+  dragged_card_id,
+  top_card_id,
+  list_to_id
+) => {
+  const LIST = await findOneList(list_to_id);
+  const CARDS = await LIST.cards;
+  moveCardsArray(CARDS, dragged_card_id, top_card_id);
+  await replaceCardsArrayInList(CARDS, list_to_id);
+};
+
+const moveCardOnCardInAnotherList = async (
+  dragged_card_id,
+  top_card_id,
+  list_from_id,
+  list_to_id
+) => {
+  await moveCardInAnotherList(dragged_card_id, list_from_id, list_to_id);
+  await moveCardOnCardInSameList(dragged_card_id, top_card_id, list_to_id);
+};
+
 module.exports = {
   createCard,
   editCard,
   deleteAllCardsFromList,
   moveAllCardsInAnotherList,
+  moveCardInAnotherList,
+  moveCardOnCardInSameList,
+  moveCardOnCardInAnotherList,
 };

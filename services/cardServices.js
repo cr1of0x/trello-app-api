@@ -1,5 +1,6 @@
 const Card = require("../models/cardModel.js");
 const List = require("../models/listModel.js");
+const arraymove = require("../utils/arrayMove.js");
 
 const createNewCard = (list_id, title) => {
   return Card.create({
@@ -26,6 +27,12 @@ const deleteAllCardsRef = (list_id) => {
   });
 };
 
+const deleteOneCardRef = (card_id, list_id) => {
+  return List.findByIdAndUpdate(list_id, {
+    $pull: { cards: card_id },
+  });
+};
+
 const changeListIdInCard = (card_id, list_id) => {
   return Card.findByIdAndUpdate(card_id, { $set: { list_id } });
 };
@@ -39,6 +46,18 @@ const moveAllCards = (cards, list_to_id) => {
   );
 };
 
+const replaceCardsArrayInList = (cards, list_id) => {
+  return List.findByIdAndUpdate(list_id, {
+    $set: { cards: cards },
+  });
+};
+
+const moveCardsArray = (cards, dragged_card_id, top_card_id) => {
+  const topCardIndex = cards.indexOf(top_card_id);
+  const draggedCardIndex = cards.indexOf(dragged_card_id);
+  arraymove(cards, draggedCardIndex, topCardIndex);
+};
+
 module.exports = {
   createNewCard,
   addCardInList,
@@ -46,4 +65,7 @@ module.exports = {
   deleteAllCardsRef,
   changeListIdInCard,
   moveAllCards,
+  deleteOneCardRef,
+  replaceCardsArrayInList,
+  moveCardsArray,
 };

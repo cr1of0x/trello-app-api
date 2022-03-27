@@ -5,6 +5,7 @@ const {
   deleteList,
   editList,
   copyList,
+  moveList,
 } = require("../controllers/listController.js");
 const { controllerHandler } = require("../utils/controllerUtils.js");
 const router = express.Router();
@@ -42,6 +43,16 @@ router.post(
   c(copyList, (req) => [
     req.body.formData,
     req.body.cards,
+    req.body.dashboard_id,
+  ])
+);
+
+router.post(
+  "/move-list",
+  verifyAcessToken,
+  c(moveList, (req) => [
+    req.body.draggedList,
+    req.body.listToDrop,
     req.body.dashboard_id,
   ])
 );
