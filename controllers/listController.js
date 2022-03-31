@@ -3,7 +3,6 @@ const { findOneDashboard } = require("../services/dashboardServices");
 const {
   createNewList,
   addListInDashboard,
-  findLists,
   deleteOneList,
   deleteListRef,
   editOneList,
@@ -46,6 +45,7 @@ const copyList = async (formData, cards, dashboard_id) => {
   const newList = await createNewList(dashboard_id, title);
   list_id = newList._id;
   await createCopiedCards(list_id, cards);
+  await addListInDashboard(dashboard_id, newList);
 };
 
 const moveList = async (draggedList, listToDrop, dashboard_id) => {

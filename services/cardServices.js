@@ -1,11 +1,13 @@
 const Card = require("../models/cardModel.js");
 const List = require("../models/listModel.js");
 const arraymove = require("../utils/arrayMove.js");
+const { description } = require("../validators/cardSchema.js");
 
-const createNewCard = (list_id, title) => {
+const createNewCard = (list_id, title, description) => {
   return Card.create({
     list_id,
     title,
+    description,
   });
 };
 
@@ -18,6 +20,12 @@ const addCardInList = (list_id, newCard) => {
 const editOneCard = (id, title) => {
   return Card.findByIdAndUpdate(id, {
     $set: { title },
+  });
+};
+
+const editOneCardDescription = (id, description) => {
+  return Card.findByIdAndUpdate(id, {
+    $set: { description },
   });
 };
 
@@ -68,4 +76,5 @@ module.exports = {
   deleteOneCardRef,
   replaceCardsArrayInList,
   moveCardsArray,
+  editOneCardDescription,
 };

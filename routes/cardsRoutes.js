@@ -4,12 +4,10 @@ const {
   editCard,
   deleteAllCardsFromList,
   moveAllCardsInAnotherList,
-  dragAndDropCard,
-  dragAndDropCardSameList,
-  dragAndDropCardAnotherList,
   moveCardInAnotherList,
   moveCardOnCardInSameList,
   moveCardOnCardInAnotherList,
+  editCardDescription,
 } = require("../controllers/cardController.js");
 const { controllerHandler } = require("../utils/controllerUtils.js");
 const router = express.Router();
@@ -20,7 +18,7 @@ const c = controllerHandler;
 router.post(
   "/create-card",
   verifyAcessToken,
-  c(createCard, (req) => [req.body.id, req.body.formData])
+  c(createCard, (req) => [req.body.list_id, req.body.formData])
 );
 
 router.post(
@@ -74,6 +72,12 @@ router.post(
     req.body.list_from_id,
     req.body.list_to_id,
   ])
+);
+
+router.post(
+  "/edit-card-description",
+  verifyAcessToken,
+  c(editCardDescription, (req) => [req.body.id, req.body.descript])
 );
 
 module.exports = router;

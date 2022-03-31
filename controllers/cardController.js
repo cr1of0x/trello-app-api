@@ -8,15 +8,16 @@ const {
   changeListIdInCard,
   replaceCardsArrayInList,
   moveCardsArray,
+  editOneCardDescription,
 } = require("../services/cardServices");
 const { deleteCardsOfList, findOneList } = require("../services/listServices");
 const { joiValidation } = require("../services/userServices");
 const cardSchema = require("../validators/cardSchema");
 
-const createCard = async (id, formData) => {
-  const { title } = await joiValidation(formData, cardSchema);
-  const newCard = await createNewCard(id, title);
-  await addCardInList(id, newCard);
+const createCard = async (list_id, formData) => {
+  const { title, description } = await joiValidation(formData, cardSchema);
+  const newCard = await createNewCard(list_id, title, description);
+  await addCardInList(list_id, newCard);
 };
 
 const editCard = async (id, title) => {
@@ -60,6 +61,10 @@ const moveCardOnCardInAnotherList = async (
   await moveCardOnCardInSameList(dragged_card_id, top_card_id, list_to_id);
 };
 
+const editCardDescription = async (id, descript) => {
+  await editOneCardDescription(id, descript);
+};
+
 module.exports = {
   createCard,
   editCard,
@@ -68,4 +73,5 @@ module.exports = {
   moveCardInAnotherList,
   moveCardOnCardInSameList,
   moveCardOnCardInAnotherList,
+  editCardDescription,
 };
