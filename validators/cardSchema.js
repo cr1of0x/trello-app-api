@@ -23,7 +23,7 @@ const cardSchema = Joi.object({
       });
       return errors;
     }),
-  formName: Joi.string(),
+  description: Joi.string().allow(null, ""),
 });
 
 module.exports = cardSchema;
